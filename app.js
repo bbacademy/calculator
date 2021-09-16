@@ -6,7 +6,7 @@ const fn = {
 	multiply: (a, b) => (a * b),
 	divide: (a, b) => (a / b),
 	power: (a, b) => Math.pow(a, b),
-	percent: (a, b) => (Math.round(a / b * 100)),
+	percent: (a, b) => ((a / b * 100).toPrecision(5)),
 }
 const store = { value: 0, method: '' }
 
@@ -17,7 +17,7 @@ addEventListener('click', ({ target }) => {
 	if (target.matches('button')) {
 		switch (target.name) {
 			case 'negate':
-				output.value = parseInt(output.value) * -1
+				output.value = parseInt(output.value || 0) * -1
 				break
 			case 'clear':
 				output.value = ''

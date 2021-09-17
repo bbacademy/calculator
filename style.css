@@ -30,6 +30,15 @@ input[value="0"] {
     grid-column-start: 1;
     grid-column-end: 3;
 }
+button, input {
+	cursor: pointer;
+}
+button:active {
+	background: lightseagreen;
+}
+input:active {
+	background: lightcoral;
+}
 output {
 	font-size: xxx-large;
     text-align: right;
@@ -43,5 +52,5 @@ output {
 	color: white;
 }
 output:empty::before {
-	content: '0';
+	content: '';
 }

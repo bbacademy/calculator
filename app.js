@@ -1,39 +1,40 @@
 const output = document.querySelector('output')
+const getValue = () => parseInt(output.value || 0)
+const setValue = value => (output.value = value)
 
-const fn = {
+Object.assign(Math, {
 	add: (a, b) => (a + b),
 	substract: (a, b) => (a - b),
 	multiply: (a, b) => (a * b),
 	divide: (a, b) => (a / b),
-	power: (a, b) => Math.pow(a, b),
-	percent: (a, b) => ((a / b * 100).toPrecision(5)),
-}
-let compute = null
+	percent: (a, b) => Math.round(a / b * 100)
+})
 
-addEventListener('click', ({ target }) => {
-	if (target.matches('input')) {
-		output.value += target.value
-	}
-	if (target.matches('button')) {
-		switch (target.name) {
-			case 'negate':
-				output.value = parseInt(output.value || 0) * -1
-				break
-			case 'clear':
-				output.value = ''
-				compute = null
-				break
-			case 'equal':
-				if (compute) {
-					output.value = compute(parseInt(output.value))
-					compute = null
-				}
-				break
-			default:
-				if (target.name in fn) {
-					compute = fn[target.name].bind(null, parseInt(output.value))
-					output.value = ''
-				}
-		}
+addEventListener('click', ({ target: { nodeName, name, value } }) => {
+	switch (nodeName) {
+		case 'INPUT':
+			output.value += value
+			break
+		case 'BUTTON':
+			switch (name) {
+				case 'negate':
+					setValue(-getValue())
+					break
+				case 'clear':
+					delete output.compute
+					setValue('')
+					break
+				case 'equal':
+					if (output.compute) {
+						setValue(output.compute(getValue()))
+						delete output.compute
+					} break
+				default:
+					const { [name]: fn } = Math
+					if (typeof fn === 'function') {
+						output.compute = fn.bind(null, getValue())
+						setValue('')
+					}
+			}
 	}
 })

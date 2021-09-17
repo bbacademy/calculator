@@ -8,7 +8,7 @@ const fn = {
 	power: (a, b) => Math.pow(a, b),
 	percent: (a, b) => ((a / b * 100).toPrecision(5)),
 }
-const store = { value: 0, method: '' }
+let compute = null
 
 addEventListener('click', ({ target }) => {
 	if (target.matches('input')) {
@@ -21,17 +21,19 @@ addEventListener('click', ({ target }) => {
 				break
 			case 'clear':
 				output.value = ''
-				store.value = undefined
-				store.method = undefined
+				compute = null
 				break
 			case 'equal':
-				if (store.method)
-					output.value = store.method(store.value, parseInt(output.value))
+				if (compute) {
+					output.value = compute(parseInt(output.value))
+					compute = null
+				}
 				break
 			default:
-				store.method = fn[target.name]
-				store.value = parseInt(output.value)
-				output.value = ''
+				if (target.name in fn) {
+					compute = fn[target.name].bind(null, parseInt(output.value))
+					output.value = ''
+				}
 		}
 	}
 })

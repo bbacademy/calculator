@@ -38,3 +38,5 @@ addEventListener('click', ({ target: { nodeName, name, value } }) => {
 			}
 	}
 })
+
+console.lgo('test')
